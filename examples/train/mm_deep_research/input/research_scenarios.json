@@ -1,0 +1,115 @@
+{
+  "scenarios": [
+    {
+      "id": "research_001",
+      "question": "What are the latest techniques for optimizing large language model training with limited GPU memory?",
+      "ground_truth": "Key techniques include: 1) Gradient checkpointing to reduce memory usage, 2) Model parallelism and pipeline parallelism, 3) Mixed precision training (FP16/BF16), 4) ZeRO optimizer state partitioning, 5) FSDP (Fully Sharded Data Parallel), 6) Activation checkpointing, 7) CPU offloading of optimizer states and parameters.",
+      "expected_keywords": [
+        "gradient checkpointing",
+        "model parallelism", 
+        "mixed precision",
+        "FSDP",
+        "ZeRO",
+        "memory optimization"
+      ],
+      "research_steps": [
+        {
+          "action": "<search>large language model training memory optimization techniques 2024</search>",
+          "expected_tool": "google_search",
+          "description": "Search for recent memory optimization techniques"
+        },
+        {
+          "action": "<search>FSDP fully sharded data parallel PyTorch implementation</search>",
+          "expected_tool": "google_search",
+          "description": "Research FSDP implementation details"
+        },
+        {
+          "action": "<python>import torch\nprint('PyTorch version:', torch.__version__)\nprint('CUDA available:', torch.cuda.is_available())\nif torch.cuda.is_available():\n    print('GPU memory:', torch.cuda.get_device_properties(0).total_memory / 1024**3, 'GB')</python>",
+          "expected_tool": "python_code",
+          "description": "Check system capabilities for training"
+        },
+        {
+          "action": "<search>ZeRO optimizer state partitioning DeepSpeed</search>",
+          "expected_tool": "google_search",
+          "description": "Research ZeRO optimization"
+        }
+      ]
+    },
+    {
+      "id": "research_002",
+      "question": "How can I implement a distributed training setup for a transformer model using PyTorch?",
+      "ground_truth": "To implement distributed training: 1) Use torch.distributed for multi-GPU setup, 2) Initialize process group with init_process_group(), 3) Wrap model with DistributedDataParallel (DDP), 4) Use DistributedSampler for data loading, 5) Handle gradient synchronization, 6) Implement proper checkpointing and resuming.",
+      "expected_keywords": [
+        "torch.distributed",
+        "DistributedDataParallel",
+        "DistributedSampler",
+        "process group",
+        "gradient synchronization"
+      ],
+      "research_steps": [
+        {
+          "action": "<search>PyTorch distributed training tutorial 2024</search>",
+          "expected_tool": "google_search",
+          "description": "Find latest distributed training guides"
+        },
+        {
+          "action": "<python>import torch\nimport torch.distributed as dist\nprint('Distributed available:', dist.is_available())\nprint('CUDA device count:', torch.cuda.device_count())\nprint('Current device:', torch.cuda.current_device() if torch.cuda.is_available() else 'CPU')</python>",
+          "expected_tool": "python_code",
+          "description": "Check distributed training capabilities"
+        },
+        {
+          "action": "<search>DistributedDataParallel vs DataParallel PyTorch differences</search>",
+          "expected_tool": "google_search",
+          "description": "Compare distributed training approaches"
+        },
+        {
+          "action": "<python># Example distributed training setup\nimport torch\nimport torch.nn as nn\nfrom torch.nn.parallel import DistributedDataParallel as DDP\n\nclass SimpleTransformer(nn.Module):\n    def __init__(self, vocab_size=1000, d_model=512):\n        super().__init__()\n        self.embedding = nn.Embedding(vocab_size, d_model)\n        self.transformer = nn.Transformer(d_model, nhead=8, num_encoder_layers=6)\n        self.out = nn.Linear(d_model, vocab_size)\n    \n    def forward(self, x):\n        x = self.embedding(x)\n        x = self.transformer(x, x)\n        return self.out(x)\n\n# Create model\nmodel = SimpleTransformer()\nprint('Model created successfully')\nprint('Model parameters:', sum(p.numel() for p in model.parameters()))</python>",
+          "expected_tool": "python_code",
+          "description": "Create example transformer model"
+        }
+      ]
+    },
+    {
+      "id": "research_003",
+      "question": "What are the best practices for fine-tuning large language models on custom datasets?",
+      "ground_truth": "Best practices include: 1) Use LoRA (Low-Rank Adaptation) or QLoRA for efficient fine-tuning, 2) Implement proper data preprocessing and tokenization, 3) Use learning rate scheduling and warmup, 4) Monitor training metrics and overfitting, 5) Use validation sets for early stopping, 6) Implement gradient accumulation for larger effective batch sizes, 7) Use mixed precision training.",
+      "expected_keywords": [
+        "LoRA",
+        "QLoRA",
+        "fine-tuning",
+        "learning rate scheduling",
+        "gradient accumulation",
+        "mixed precision"
+      ],
+      "research_steps": [
+        {
+          "action": "<search>LoRA low rank adaptation fine-tuning large language models</search>",
+          "expected_tool": "google_search",
+          "description": "Research LoRA fine-tuning techniques"
+        },
+        {
+          "action": "<search>QLoRA quantized LoRA memory efficient fine-tuning</search>",
+          "expected_tool": "google_search",
+          "description": "Research QLoRA for memory efficiency"
+        },
+        {
+          "action": "<python>import torch\nimport torch.nn as nn\n\n# Simulate LoRA layer\nclass LoRALayer(nn.Module):\n    def __init__(self, in_features, out_features, rank=16):\n        super().__init__()\n        self.rank = rank\n        self.lora_A = nn.Linear(in_features, rank, bias=False)\n        self.lora_B = nn.Linear(rank, out_features, bias=False)\n        self.scaling = 1.0 / rank\n    \n    def forward(self, x):\n        return self.lora_B(self.lora_A(x)) * self.scaling\n\n# Test LoRA layer\nlora = LoRALayer(512, 512, rank=16)\nprint('LoRA layer created')\nprint('LoRA parameters:', sum(p.numel() for p in lora.parameters()))\nprint('Scaling factor:', lora.scaling)</python>",
+          "expected_tool": "python_code",
+          "description": "Implement LoRA layer example"
+        },
+        {
+          "action": "<search>learning rate scheduling warmup fine-tuning transformers</search>",
+          "expected_tool": "google_search",
+          "description": "Research learning rate strategies"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "description": "Deep research test scenarios for tool server evaluation",
+    "created": "2024-01-15",
+    "total_scenarios": 3,
+    "tools_required": ["google_search", "python_code"]
+  }
+}

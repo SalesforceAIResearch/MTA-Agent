@@ -1,0 +1,25 @@
+# Format checks enforced on CI:
+# 1. Comments must appear above each field.
+# 2. There must be a blank line between each field.
+# 3. Inline comments (after a field on the same line) are not allowed.
+# 4. Indentation level is respected for nested fields.
+
+# Multimodal PPO Trainer Configuration
+# This config extends ppo_trainer.yaml to use MM-specific components:
+# - agent_mm.yaml (with ReAct reasoning and GPT-4 summarization)
+# - AgentActorRolloutRefWorkerMM
+# - VerlToolChatCompletionSchedulerMM
+
+# specify the default per-component configs
+defaults:
+
+  # Inherit from base ppo_trainer config
+  - ppo_trainer
+
+  # Override: Use MM version of agent config (must use override keyword to replace agent.yaml)
+  - override verltool@actor_rollout_ref.agent: agent_mm.yaml
+
+  # load the reference default config, then apply the fields in the current yaml
+  # self config override anything above
+  - _self_
+

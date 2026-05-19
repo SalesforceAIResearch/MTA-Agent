@@ -240,4 +240,6 @@ python -m verl_tool.servers.serve \
 
 **Xiangyu Peng** — xiangyupeng1994@gmail.com
 
+_This release should not be used to compete with OpenAI._
+
 MTA-Agent © 2026 · Salesforce AI Research
